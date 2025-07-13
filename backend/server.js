@@ -7,7 +7,13 @@ const authRoutes = require('./routes/auth');
 const passwordRoutes = require('./routes/passwords');
 
 const app = express();
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors({
+  origin: [
+    'https://pass-m-3itr.vercel.app', // your deployed frontend URL
+    'http://localhost:3000'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 

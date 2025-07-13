@@ -20,7 +20,13 @@ export const apiCall = async (endpoint, options = {}) => {
     },
   };
 
-  return fetch(url, finalOptions);
+  try {
+    const response = await fetch(url, finalOptions);
+    return response;
+  } catch (error) {
+    console.error('API call failed:', error);
+    throw error;
+  }
 };
 
 export default apiCall; 

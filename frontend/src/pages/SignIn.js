@@ -13,7 +13,6 @@ const SignIn = ({ setAuth }) => {
   const [form, setForm] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
@@ -24,7 +23,6 @@ const SignIn = ({ setAuth }) => {
     setMessage('');
     if (!validateEmail(form.email)) return setError('Invalid email format');
     if (!validatePassword(form.password)) return setError('Password must be at least 8 characters');
-    setLoading(true);
     try {
       const res = await apiCall('/api/auth/login', {
         method: 'POST',
@@ -40,7 +38,6 @@ const SignIn = ({ setAuth }) => {
     } catch (err) {
       setError('Sign in failed');
     }
-    setLoading(false);
   };
 
   return (

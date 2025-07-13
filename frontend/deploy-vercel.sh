@@ -24,5 +24,5 @@ vercel --prod
 
 echo "✅ Frontend deployment complete!"
 echo "🔧 Don't forget to set environment variables in Vercel dashboard:"
-echo "   - REACT_APP_API_URL=https://your-backend-url.vercel.app"
+echo "   - REACT_APP_API_URL=https://vercel.com/04shubham7s-projects/pass-m/n9Mv6chu2dj77ZgHVZdRh6A8aUpS
 echo "   - REACT_APP_NODE_ENV=production" 

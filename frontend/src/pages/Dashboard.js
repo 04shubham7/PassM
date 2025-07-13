@@ -20,7 +20,7 @@ const Dashboard = () => {
   const [search, setSearch] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null, title: '' });
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(() => {
+  const [darkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('theme') === 'dark' || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
     }
@@ -80,7 +80,7 @@ const Dashboard = () => {
       document.removeEventListener('visibilitychange', handleLogoutEvent);
       clearInterval(interval);
     };
-  }, []);
+  }, [navigate]);
 
   const fetchPasswords = () => {
     apiCall('/api/passwords')
@@ -134,11 +134,6 @@ const Dashboard = () => {
     } catch {
       showToast('Error saving password', 'error');
     }
-  };
-
-  const handleLogout = () => {
-    apiCall('/api/auth/logout', { method: 'POST' })
-      .then(() => navigate('/signin'));
   };
 
   const handleView = (pw) => {

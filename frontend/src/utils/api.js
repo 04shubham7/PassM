@@ -1,5 +1,5 @@
 // API utility for making requests to the backend
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://passm.onrender.com';
 
 export const apiCall = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;

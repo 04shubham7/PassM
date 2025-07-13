@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/04shubham7/PassM/issues"
   },
-  "homepage": "https://github.com/04shubham7/PassM#readme"
+  "homepage": "https://github.com/04shubham7/PassM#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2"
+  }
 }

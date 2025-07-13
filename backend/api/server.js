@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-require('dotenv').config();
+require('dotenv').config({ path: './config.env' });
 const authRoutes = require('../routes/auth');
 const passwordRoutes = require('../routes/passwords');
 

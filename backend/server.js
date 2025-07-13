@@ -2,16 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-require('dotenv').config();
+require('dotenv').config({ path: './config.env' });
 const authRoutes = require('./routes/auth');
 const passwordRoutes = require('./routes/passwords');
 
 const app = express();
 const corsOptions = {
-  origin: [
-    'https://pass-m-3itr.vercel.app',
-    'http://localhost:3000'
-  ],
+  origin: true, // Allow all origins for deployment troubleshooting
   credentials: true
 };
 app.use(cors(corsOptions));
@@ -20,10 +17,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://shubham1230101130:tBc3kiQrDkXdq7nk@cluster0.tbrbsay.mongodb.net/PassM", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => console.log('MongoDB connected'))
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
 app.get('/', (req, res) => {

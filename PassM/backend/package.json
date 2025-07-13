@@ -1,10 +1,44 @@
 {
+  "name": "passm-backend",
+  "version": "1.0.0",
+  "description": "PassM Backend API",
+  "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build": "echo 'Backend build complete'",
+    "postinstall": "echo 'Dependencies installed successfully'",
+    "install-deps": "npm install --production=false"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
+    "nodemailer": "^6.9.7",
     "twilio": "^5.7.2"
-  }
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/PassM.git"
+  },
+  "keywords": [
+    "password-manager",
+    "api",
+    "express",
+    "mongodb"
+  ],
+  "author": "Shubham",
+  "license": "MIT"
 }

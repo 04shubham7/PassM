@@ -16,7 +16,6 @@ const SignUp = ({ setAuth }) => {
   const [form, setForm] = useState({ email: '', phone: '', password: '' });
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
@@ -28,7 +27,6 @@ const SignUp = ({ setAuth }) => {
     if (!validateEmail(form.email)) return setError('Invalid email format');
     if (!validatePassword(form.password)) return setError('Password must be at least 8 characters');
     if (!validatePhone(form.phone)) return setError('Invalid phone number');
-    setLoading(true);
     try {
       const res = await apiCall('/api/auth/signup', {
         method: 'POST',
@@ -45,7 +43,6 @@ const SignUp = ({ setAuth }) => {
     } catch (err) {
       setError('Sign up failed');
     }
-    setLoading(false);
   };
 
   return (

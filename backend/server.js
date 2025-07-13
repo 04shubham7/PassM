@@ -24,7 +24,7 @@ mongoose.connect(process.env.MONGODB_URI)
 app.get('/', (req, res) => {
   res.send('PassM API is running');
 });
-
+console.log('Loaded MONGODB_URI:', process.env.MONGODB_URI);
 app.use('/api/auth', authRoutes);
 app.use('/api/passwords', passwordRoutes);
 

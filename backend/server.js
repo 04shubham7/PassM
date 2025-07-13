@@ -8,12 +8,11 @@ const passwordRoutes = require('./routes/passwords');
 
 const app = express();
 const corsOptions = {
-  origin: '*',
-  // origin: [
-  //   'https://pass-m-3itr.vercel.app', // your actual frontend Vercel URL
-  //   'http://localhost:3000'
-  // ],
-  // credentials: true
+  origin: [
+    'https://pass-m-3itr.vercel.app',
+    'http://localhost:3000'
+  ],
+  credentials: true
 };
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));

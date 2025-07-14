@@ -210,8 +210,6 @@ const SignIn = ({ setAuth }) => {
         </div>
       </form>
       
-      {/* Debug component for mobile testing */}
-      <DebugInfo />
     </div>
   );
 };

@@ -31,23 +31,28 @@ exports.login = async (req, res) => {
     if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || 'your_jwt_secret_here', { expiresIn: '1d' });
     
-    // Improved cookie settings for better mobile compatibility
+    // Mobile-friendly cookie settings
     const cookieOptions = {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       path: '/',
+      sameSite: 'lax', // More permissive for mobile browsers
     };
 
-    // Set secure and sameSite based on environment
-    if (process.env.NODE_ENV === 'production') {
+    // Only set secure in production with HTTPS
+    if (process.env.NODE_ENV === 'production' && req.secure) {
       cookieOptions.secure = true;
-      cookieOptions.sameSite = 'none';
-    } else {
-      cookieOptions.sameSite = 'lax';
     }
 
+    console.log('Setting cookie with options:', cookieOptions);
     res.cookie('token', token, cookieOptions);
-    res.json({ message: 'Login successful', userId: user._id });
+    
+    // Also send token in response body for mobile fallback
+    res.json({ 
+      message: 'Login successful', 
+      userId: user._id,
+      token: token // Temporary fallback for mobile
+    });
     console.log("login Success----------->")
   } catch (err) {
     console.error('Login error:', err);
@@ -152,14 +157,12 @@ exports.logout = (req, res) => {
   const cookieOptions = {
     httpOnly: true,
     path: '/',
+    sameSite: 'lax',
   };
 
-  // Set secure and sameSite based on environment
-  if (process.env.NODE_ENV === 'production') {
+  // Only set secure in production with HTTPS
+  if (process.env.NODE_ENV === 'production' && req.secure) {
     cookieOptions.secure = true;
-    cookieOptions.sameSite = 'none';
-  } else {
-    cookieOptions.sameSite = 'lax';
   }
 
   res.clearCookie('token', cookieOptions);

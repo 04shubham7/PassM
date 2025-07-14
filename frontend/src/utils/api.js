@@ -12,6 +12,12 @@ export const apiCall = async (endpoint, options = {}) => {
     },
   };
 
+  // Add Authorization header if token exists in localStorage (mobile fallback)
+  const authToken = localStorage.getItem('authToken');
+  if (authToken && !defaultOptions.headers.Authorization) {
+    defaultOptions.headers.Authorization = `Bearer ${authToken}`;
+  }
+
   const finalOptions = {
     ...defaultOptions,
     ...options,
@@ -25,6 +31,7 @@ export const apiCall = async (endpoint, options = {}) => {
     url,
     method: finalOptions.method || 'GET',
     hasBody: !!finalOptions.body,
+    hasAuthToken: !!authToken,
     userAgent: navigator.userAgent,
     isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
   });

@@ -27,8 +27,32 @@ function App() {
     apiCall('/api/auth/check')
       .then(res => res.json())
       .then(data => {
-        if (data.authenticated) setAuth({ authenticated: true, userId: data.userId, email: data.email, checked: true });
-        else setAuth({ authenticated: false, userId: null, email: null, checked: true });
+        if (data.authenticated) {
+          setAuth({ authenticated: true, userId: data.userId, email: data.email, checked: true });
+        } else {
+          // Check if we have a token in localStorage as fallback
+          const authToken = localStorage.getItem('authToken');
+          if (authToken) {
+            console.log('Found token in localStorage, attempting to validate...');
+            // Try to validate the token by making a request to a protected endpoint
+            apiCall('/api/auth/profile')
+              .then(profileRes => profileRes.json())
+              .then(profileData => {
+                if (profileData.email) {
+                  setAuth({ authenticated: true, userId: profileData.userId, email: profileData.email, checked: true });
+                } else {
+                  localStorage.removeItem('authToken');
+                  setAuth({ authenticated: false, userId: null, email: null, checked: true });
+                }
+              })
+              .catch(() => {
+                localStorage.removeItem('authToken');
+                setAuth({ authenticated: false, userId: null, email: null, checked: true });
+              });
+          } else {
+            setAuth({ authenticated: false, userId: null, email: null, checked: true });
+          }
+        }
       })
       .catch(() => setAuth({ authenticated: false, userId: null, email: null, checked: true }));
   }, []);

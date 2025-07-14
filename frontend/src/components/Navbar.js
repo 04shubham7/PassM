@@ -25,6 +25,14 @@ function Navbar({ auth, setAuth }) {
   const handleLogout = () => {
     apiCall('/api/auth/logout', { method: 'POST' })
       .then(() => {
+        // Clear localStorage token
+        localStorage.removeItem('authToken');
+        setAuth({ authenticated: false, userId: null, email: null, checked: true });
+        navigate('/signin');
+      })
+      .catch(() => {
+        // Even if logout API fails, clear local storage
+        localStorage.removeItem('authToken');
         setAuth({ authenticated: false, userId: null, email: null, checked: true });
         navigate('/signin');
       });

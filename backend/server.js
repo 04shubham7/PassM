@@ -77,6 +77,20 @@ app.get('/api/test', (req, res) => {
   });
 });
 
+// Mobile compatibility test endpoint
+app.get('/api/mobile-test', (req, res) => {
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(req.get('User-Agent'));
+  
+  res.json({
+    message: 'Mobile compatibility test',
+    isMobile,
+    userAgent: req.get('User-Agent'),
+    cookies: req.cookies,
+    hasToken: !!(req.cookies.token || (req.headers.authorization && req.headers.authorization.startsWith('Bearer '))),
+    timestamp: new Date().toISOString()
+  });
+});
+
 console.log('Loaded MONGODB_URI:', process.env.MONGODB_URI);
 app.use('/api/auth', authRoutes);
 app.use('/api/passwords', passwordRoutes);

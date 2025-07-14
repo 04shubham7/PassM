@@ -46,6 +46,18 @@ const SignIn = ({ setAuth }) => {
     }
   };
 
+  const testMobileCompatibility = async () => {
+    try {
+      const res = await apiCall('/api/mobile-test');
+      const data = await res.json();
+      console.log('Mobile Test Response:', data);
+      setMessage(`Mobile test: ${data.isMobile ? 'Mobile detected' : 'Desktop detected'}. Check console for details.`);
+    } catch (err) {
+      console.error('Mobile Test Error:', err);
+      setError('Mobile test failed. Check console for details.');
+    }
+  };
+
   const handleSubmit = async e => {
     e.preventDefault();
     setError('');
@@ -80,6 +92,13 @@ const SignIn = ({ setAuth }) => {
 
       if (res.ok && data.message) {
         setMessage('Sign in successful! Redirecting...');
+        
+        // Store token in localStorage as fallback for mobile
+        if (data.token) {
+          localStorage.setItem('authToken', data.token);
+          console.log('Token stored in localStorage as fallback');
+        }
+        
         setAuth({ authenticated: true, userId: data.userId, email: form.email, checked: true });
         
         // Add a small delay to show success message before redirecting
@@ -172,14 +191,23 @@ const SignIn = ({ setAuth }) => {
           </a>
         </div>
         
-        {/* Debug button for testing */}
-        <button
-          type="button"
-          onClick={testApiConnection}
-          className="w-full bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 transition-all text-sm"
-        >
-          Test API Connection
-        </button>
+        {/* Debug buttons for testing */}
+        <div className="space-y-2">
+          <button
+            type="button"
+            onClick={testApiConnection}
+            className="w-full bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 transition-all text-sm"
+          >
+            Test API Connection
+          </button>
+          <button
+            type="button"
+            onClick={testMobileCompatibility}
+            className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-all text-sm"
+          >
+            Test Mobile Compatibility
+          </button>
+        </div>
       </form>
       
       {/* Debug component for mobile testing */}

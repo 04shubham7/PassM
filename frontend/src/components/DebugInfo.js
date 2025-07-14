@@ -15,6 +15,7 @@ const DebugInfo = () => {
       viewportSize: `${window.innerWidth}x${window.innerHeight}`,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       cookies: document.cookie,
+      localStorageToken: localStorage.getItem('authToken') ? 'Present' : 'None',
       apiUrl: process.env.REACT_APP_API_URL,
       timestamp: new Date().toISOString()
     };

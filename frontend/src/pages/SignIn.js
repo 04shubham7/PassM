@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiCall from '../utils/api';
-import DebugInfo from '../components/DebugInfo';
 
 function validateEmail(email) {
   return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);

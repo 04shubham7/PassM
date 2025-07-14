@@ -136,13 +136,19 @@ exports.verifyOtp = async (req, res) => {
 exports.checkAuth = (req, res) => {
   console.log('CheckAuth - Cookies:', req.cookies);
   console.log('CheckAuth - Headers:', req.headers);
-  
-  const token = req.cookies.token;
+
+  // Prefer cookie, fallback to Authorization header
+  let token = req.cookies.token;
+  if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+    token = req.headers.authorization.split(' ')[1];
+    console.log('CheckAuth - Token found in Authorization header');
+  }
+
   if (!token) {
-    console.log('CheckAuth - No token found in cookies');
+    console.log('CheckAuth - No token found in cookies or headers');
     return res.status(401).json({ authenticated: false, error: 'No token found' });
   }
-  
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_here');
     console.log('CheckAuth - Token verified successfully for user:', decoded.userId);

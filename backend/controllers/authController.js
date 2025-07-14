@@ -30,15 +30,27 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || 'your_jwt_secret_here', { expiresIn: '1d' });
-    res.cookie('token', token, {
+    
+    // Improved cookie settings for better mobile compatibility
+    const cookieOptions = {
       httpOnly: true,
-      sameSite: 'none',
-      secure: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-    res.json({ message: 'Login successful' });
-    console.log("login Suuccess----------->")
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      path: '/',
+    };
+
+    // Set secure and sameSite based on environment
+    if (process.env.NODE_ENV === 'production') {
+      cookieOptions.secure = true;
+      cookieOptions.sameSite = 'none';
+    } else {
+      cookieOptions.sameSite = 'lax';
+    }
+
+    res.cookie('token', token, cookieOptions);
+    res.json({ message: 'Login successful', userId: user._id });
+    console.log("login Success----------->")
   } catch (err) {
+    console.error('Login error:', err);
     res.status(400).json({ error: err.message });
   }
 };
@@ -117,18 +129,40 @@ exports.verifyOtp = async (req, res) => {
 };
 
 exports.checkAuth = (req, res) => {
+  console.log('CheckAuth - Cookies:', req.cookies);
+  console.log('CheckAuth - Headers:', req.headers);
+  
   const token = req.cookies.token;
-  if (!token) return res.status(401).json({ authenticated: false });
+  if (!token) {
+    console.log('CheckAuth - No token found in cookies');
+    return res.status(401).json({ authenticated: false, error: 'No token found' });
+  }
+  
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_here');
+    console.log('CheckAuth - Token verified successfully for user:', decoded.userId);
     res.json({ authenticated: true, userId: decoded.userId });
   } catch (err) {
-    res.status(401).json({ authenticated: false });
+    console.error('CheckAuth - Token verification failed:', err.message);
+    res.status(401).json({ authenticated: false, error: 'Invalid token' });
   }
 };
 
 exports.logout = (req, res) => {
-  res.clearCookie('token', { httpOnly: true, sameSite: 'none', secure: true });
+  const cookieOptions = {
+    httpOnly: true,
+    path: '/',
+  };
+
+  // Set secure and sameSite based on environment
+  if (process.env.NODE_ENV === 'production') {
+    cookieOptions.secure = true;
+    cookieOptions.sameSite = 'none';
+  } else {
+    cookieOptions.sameSite = 'lax';
+  }
+
+  res.clearCookie('token', cookieOptions);
   res.json({ message: 'Logged out' });
 };
 

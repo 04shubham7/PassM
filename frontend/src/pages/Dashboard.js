@@ -159,11 +159,11 @@ const Dashboard = () => {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.message === 'OTP verified') {
+        if (data.message === 'OTP verified' && data.token) {
+          // Store the 2FA JWT token for 2FA-protected requests
+          localStorage.setItem('authToken', data.token);
           if (pendingAction === 'view') {
-            apiCall(`/api/passwords/${pendingPw._id}`, {
-              headers: { 'x-2fa-verified': 'true' },
-            })
+            apiCall(`/api/passwords/${pendingPw._id}`)
               .then(res => res.json())
               .then(data => {
                 setViewPassword(data.password);
@@ -181,7 +181,6 @@ const Dashboard = () => {
           } else if (pendingAction === 'delete') {
             apiCall(`/api/passwords/${pendingPw.id}`, {
               method: 'DELETE',
-              headers: { 'x-2fa-verified': 'true' },
             })
               .then(() => {
                 setPasswords(passwords.filter(pw => pw._id !== pendingPw.id));

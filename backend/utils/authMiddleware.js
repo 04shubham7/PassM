@@ -20,6 +20,8 @@ module.exports = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_here');
     req.user = decoded;
+    // Ensure twofaVerified is set if present in token
+    req.user.twofaVerified = !!decoded.twofaVerified;
     console.log('Token verified successfully for user:', decoded.userId);
     next();
   } catch (err) {

@@ -1,4 +1,6 @@
 module.exports = (req, res, next) => {
-  req.user.twofaVerified = req.headers['x-2fa-verified'] === 'true';
+  if (!req.user.twofaVerified) {
+    return res.status(401).json({ error: '2FA verification required' });
+  }
   next();
 }; 

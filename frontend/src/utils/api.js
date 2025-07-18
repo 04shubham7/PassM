@@ -12,9 +12,9 @@ export const apiCall = async (endpoint, options = {}) => {
     },
   };
 
-  // Add Authorization header if token exists in localStorage (mobile fallback)
+  // Always get the latest token from localStorage
   const authToken = localStorage.getItem('authToken');
-  if (authToken && !defaultOptions.headers.Authorization) {
+  if (authToken) {
     defaultOptions.headers.Authorization = `Bearer ${authToken}`;
   }
 

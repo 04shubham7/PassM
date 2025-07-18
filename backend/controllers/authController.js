@@ -127,7 +127,13 @@ exports.verifyOtp = async (req, res) => {
     user.otp = undefined;
     user.otpExpires = undefined;
     await user.save();
-    res.json({ message: 'OTP verified' });
+    // Issue a new JWT with twofaVerified: true, valid for 5 minutes
+    const token = jwt.sign(
+      { userId: user._id, twofaVerified: true },
+      process.env.JWT_SECRET || 'your_jwt_secret_here',
+      { expiresIn: '5m' }
+    );
+    res.json({ message: 'OTP verified', token });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
